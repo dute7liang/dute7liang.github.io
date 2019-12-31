@@ -1,0 +1,113 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description" content="Java,Spring,Maven,SpringBoot,Dubbo"><meta name="keywords" content="Java,Spring,Maven,SpringBoot,Dubbo"><link rel="stylesheet" type="text/css" href="//fonts.loli.net/css?family=Source+Code+Pro"><link rel="stylesheet" type="text/css" href="/css/style.css?v=2.0.4"><link rel="stylesheet" type="text/css" href="/css/highlight.css?v=2.0.4"><link rel="Shortcut Icon" href="/favicon.ico"><link rel="bookmark" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"><link rel="alternate" type="application/atom+xml" href="/atom.xml"><link rel="stylesheet" type="text/css" href="https://unpkg.com/gitalk/dist/gitalk.css?v=2.0.4"><title>Redis基础 | duteliang</title><meta name="generator" content="Hexo 4.2.0"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">Redis基础</h1><a id="logo" href="/.">duteliang</a><p class="description"></p></div><div id="nav-menu"><a href="/." class="current"><i class="fa fa-home"> 首页</i></a><a href="/archives/"><i class="fa fa-archive"> 归档</i></a><a href="/about/"><i class="fa fa-user"> 关于</i></a><a href="/atom.xml"><i class="fa fa-rss"> 订阅</i></a></div><div id="search-form"><div id="result-mask" class="hide"></div><label><input id="search-key" type="text" autocomplete="off" placeholder="搜索"></label><div id="result-wrap" class="hide"><div id="search-result"></div></div><div class="hide"><template id="search-tpl"><div class="item"><a href="/{path}" title="{title}"><div class="title">{title}</div><div class="time">{date}</div><div class="tags">{tags}</div></a></div></template></div></div></div><div id="layout" class="layout-g"><div class="layout-l"><div class="content_container"><div class="post"><h1 class="post-title">Redis基础</h1><div class="post-meta"><a href="/2019/03/12/nosql/Redis%E5%9F%BA%E7%A1%80/#comments" class="comment-count"></a><p><span class="date">Mar 12, 2019</span><span><a href="/categories/NoSql/" class="category">NoSql</a></span><span><i id="busuanzi_container_page_pv"><i id="busuanzi_value_page_pv"></i><i>点击</i></i></span></p></div><div class="post-content"><h1 id="Redis基础"><a href="#Redis基础" class="headerlink" title="Redis基础"></a>Redis基础</h1><h2 id="基础数据结构"><a href="#基础数据结构" class="headerlink" title="基础数据结构"></a>基础数据结构</h2><ul>
+<li><p>REDIS_ENCODING_INT（long类型的整数）</p>
+</li>
+<li><p>REDIS_ENCODING_EMBSTR embstr （编码的简单动态字符串） &lt; 44字节使用</p>
+</li>
+<li><p>REDIS_ENCODING_RAW （简单动态字符串）</p>
+</li>
+<li><p>REDIS_ENCODING_HT （字典）</p>
+</li>
+<li><p>REDIS_ENCODING_LINKEDLIST （双端链表）</p>
+</li>
+<li><p>REDIS_ENCODING_ZIPLIST （压缩列表）</p>
+</li>
+<li><p>REDIS_ENCODING_INTSET （整数集合）</p>
+</li>
+<li><p>REDIS_ENCODING_SKIPLIST （跳跃表和字典）</p>
+</li>
+<li><p>string：  raw int embstr</p>
+</li>
+<li><p>hash: hashTable zipList</p>
+</li>
+<li><p>list: linkedList  zipList</p>
+</li>
+<li><p>set： hashTable intset</p>
+</li>
+<li><p>zset: skiplist ziplist</p>
+</li>
+</ul>
+<h2 id="各种类型的常用命令"><a href="#各种类型的常用命令" class="headerlink" title="各种类型的常用命令"></a>各种类型的常用命令</h2><p><a href="https://redis.io/commands/#" target="_blank" rel="noopener">官网指令查询</a></p>
+<h3 id="连接"><a href="#连接" class="headerlink" title="连接"></a>连接</h3><p>远程连接时，redis配置文件，需要将bind修改为指定的ip才能连接</p>
+<p>redis-cli -h 138.138.138.138  -p  6379 -a password</p>
+<h3 id="通用指令"><a href="#通用指令" class="headerlink" title="通用指令"></a>通用指令</h3><p>keys <strong>不建议生产环境使用</strong> O(n)</p>
+<p>keys *   查出所有key<br>keys test?   查出所有test开头的5位字符，?表示一个字符<br>keys test*   查出test开头所有key</p>
+<p>实际生产环节中可以使用。查询指定数量的key<br>SCAN 0 MATCH scxx* COUNT 200</p>
+<p>dbsize 查询所有数据总数</p>
+<p>exists key  判断key是否存在<br>return: 0  1</p>
+<p>del key 删除某个key，可以一次性删除说个<br>return: 0  成功删除key的数量</p>
+<p>expire key seconds 设置过期时间</p>
+<p>ttl key  查询key剩余的过期时间<br>return: -1：没有过期时间   -2：key不存在</p>
+<p>persist key  去掉过期时间</p>
+<p>type key  判断key的类型<br>return: string,hash,list,zet,szet,none</p>
+<h3 id="string"><a href="#string" class="headerlink" title="string"></a>string</h3><p>get set del</p>
+<p>incr decr 自增减1</p>
+<p>incrby decrby  自增减自定义数字</p>
+<p>setnx  key不存在才设置</p>
+<p>setxx  key存在才设置</p>
+<p>mset mget  批量操作</p>
+<p>append  添加字符串  return: 新的字符串长度</p>
+<p>strlen  字符串长度</p>
+<p>getrange key start end  获取指定的字符串，下标从0开始</p>
+<p>setrange key offset value 修改指定下标后的所有字符串</p>
+<h3 id="hash"><a href="#hash" class="headerlink" title="hash"></a>hash</h3><p>hget hset hdel</p>
+<p>hset key filed value</p>
+<p>hgetall  获取的所有和filed和value</p>
+<p>hexists  判断某个filed是否存在</p>
+<p>hlen 获取filed的数量</p>
+<p>hmget hmset  批量操作</p>
+<p>hsetnx 存在则新增数据</p>
+<p>hincrby 增加自定义数字(没有自定义减)</p>
+<h3 id="list：-有序，可以重复，左右两边弹出"><a href="#list：-有序，可以重复，左右两边弹出" class="headerlink" title="list： 有序，可以重复，左右两边弹出"></a>list： 有序，可以重复，左右两边弹出</h3><p>lpush rpush  左边插入，右边插入</p>
+<p>key value1 value2 value3 value4</p>
+<p>lpop rpop 左边弹出数据,右边弹出数据</p>
+<p>linsert 在list指定的值前后插入newValue  </p>
+<p>linsert key before|after value newValue</p>
+<p>lrem 删除数据  </p>
+<p>lrem key count value<br>注意count的值的特性:</p>
+<ol>
+<li>count &gt; 0 : 从头到尾删除count个等于value的值</li>
+<li>count &lt; 0 ：从尾到头删除count个等于value的值</li>
+<li>count = 0 ：删除所有等于vlaue的值</li>
+</ol>
+<p>ltrim 修剪数组，保留指定的部分<br>ltrim key start end  注意负数，<br>0：表示第一个数据  -1：表示倒数第一个数据  -2：表示倒数第二个数据…</p>
+<p>lrange key start end 范围查询 闭区间</p>
+<p>lindex key index  根据下标取数据</p>
+<p>llen key  获取列表的长度</p>
+<p>lset key index newValue  设置指定下标的数据</p>
+<p>blpop brpop 阻塞版本</p>
+<h3 id="set-集合-不可以重复"><a href="#set-集合-不可以重复" class="headerlink" title="set 集合 不可以重复"></a>set 集合 不可以重复</h3><p>sadd 添加元素，可添加多个元素</p>
+<p>srem 删除数据,可删除多个元素</p>
+<p>scard 获取集合的大小</p>
+<p>sinter sdiff sunion  获取集合的交集、差集、并集</p>
+<p>sismember 判断元素是否在集合中</p>
+<p>srandmember 随机挑选指定数量的元素</p>
+<p>spop 随机弹出一个元素</p>
+<p>smembers 取出集合中的所有元素</p>
+<h3 id="zset-有序集合-有序，score可以重复-member不可以重复"><a href="#zset-有序集合-有序，score可以重复-member不可以重复" class="headerlink" title="zset 有序集合 , 有序，score可以重复,member不可以重复"></a>zset 有序集合 , 有序，score可以重复,member不可以重复</h3><p>zadd 添加元素  </p>
+<p>zadd key score member score elment …</p>
+<p>zrem 删除指定的元素<br>zrem key member …</p>
+<p>zcard 获取集合的大小</p>
+<p>zscore key member  获取指定member的分数</p>
+<p>zincrby key num member 增加某个member的分数</p>
+<p>zrank key member 获取排名(从0开始)</p>
+<p>zrevrank key member 获取指定元素的排序(从高到低排序)</p>
+<p>zrange key strat end 获取排名内的数据</p>
+<p>zrevrange 根据排名内的数据（从高到低）</p>
+<p>zrangebyscore 获取指定分数之间的数据<br>zrangebyscore key minScore maxScore</p>
+<p>zrevrangebyscore 获取制定分数之间的数据，从高到低排名</p>
+<p>zcount 获取指定分数范围的个数<br>zcount key minScore maxScore</p>
+<p>zremrangebyrank 根据排名来删除数据<br>zremrangebyrank key start end</p>
+<p>zremrangebyscore 删除指定分数内的数据<br>zremrangebyscore key minScore maxScore</p>
+<p>zinterscore zunionscore 集合操作。 获取集交集，并集</p>
+</div><div class="post-copyright"><blockquote><p>原文作者: duteliang</p><p>原文链接: <a href="http://yoursite.com/2019/03/12/nosql/Redis基础/">http://yoursite.com/2019/03/12/nosql/Redis基础/</a></p><p>版权声明: 转载请注明出处(必须保留原文作者署名原文链接)</p></blockquote></div><div class="tags"><a href="/tags/Redis/">Redis</a></div><div class="post-share"><div class="social-share"><span>分享到:</span></div></div><div class="post-nav"><a href="/2019/03/12/jvm/JVM%E8%B0%83%E8%AF%95%E5%91%BD%E4%BB%A4/" class="pre">JVM调试命令</a><a href="/2019/02/14/javabase/shejimoshi/%E5%85%B6%E4%BB%96%E6%A8%A1%E5%BC%8F/" class="next">其他模式</a></div><div id="comments"><div id="container"><script type="text/javascript" src="https://unpkg.com/gitalk/dist/gitalk.min.js?v=2.0.4"></script><script type="text/javascript" src="//cdn.bootcss.com/blueimp-md5/2.10.0/js/md5.js?v=2.0.4"></script><script>var gitalk = new Gitalk({
+  clientID: 'e66ccfd3cc0f988a43f7',
+  clientSecret: 'd9cf0716cfc050819353e4424522261ef119d283',
+  repo: 'gittalk',
+  owner: 'dute7liang',
+  admin: ['dute7liang'],
+  id: md5(window.location.pathname),
+  distractionFreeMode: false,
+  language: 'zh-CN',
+  pagerDirection: 'last'
+})
+gitalk.render('container')</script></div></div></div></div></div><div class="layout-r"><div id="sidebar"><div class="search-pla"></div><div id="toc" class="widget"><div class="widget-title"><i class="fa fa-fei">文章目录</i></div><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Redis基础"><span class="toc-text">Redis基础</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#基础数据结构"><span class="toc-text">基础数据结构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#各种类型的常用命令"><span class="toc-text">各种类型的常用命令</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#连接"><span class="toc-text">连接</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#通用指令"><span class="toc-text">通用指令</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#string"><span class="toc-text">string</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#hash"><span class="toc-text">hash</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#list：-有序，可以重复，左右两边弹出"><span class="toc-text">list： 有序，可以重复，左右两边弹出</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#set-集合-不可以重复"><span class="toc-text">set 集合 不可以重复</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#zset-有序集合-有序，score可以重复-member不可以重复"><span class="toc-text">zset 有序集合 , 有序，score可以重复,member不可以重复</span></a></li></ol></li></ol></li></ol></div><div class="widget"><div class="widget-title"><i class="fa fa-xie"> 最新文章</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2019/12/30/microservices/zookeeper/">ZooKeeper</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/12/30/microservices/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/">分布式锁</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/10/12/framework/SpringBoot%E5%90%AF%E5%8A%A8/">SpringBoot启动</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/09/12/framework/SpringBoot%E6%89%93%E5%8C%85%E5%88%86%E7%A6%BB%E8%B5%84%E6%BA%90%E6%96%87%E4%BB%B6/">SpringBoot打包分离资源文件</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/09/12/framework/Bean%E7%9A%84%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F/">Bean的生命周期</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/20/javabase/J.U.C/">J.U.C</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/12/javabase/Servlet/">Servlet</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/25/javabase/HashMap/">HashMap</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/19/javabase/%E7%BA%BF%E7%A8%8B%E5%92%8C%E7%BA%BF%E7%A8%8B%E6%B1%A0/">Java线程和线程池</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/18/javabase/%E9%94%81%E3%80%81AQS/">锁、AQS</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-gui"> 分类</i></div><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Java%E5%9F%BA%E7%A1%80/">Java基础</a><span class="category-list-count">12</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java%E6%A1%86%E6%9E%B6/">Java框架</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/NoSql/">NoSql</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%85%B6%E4%BB%96/">其他</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/">分布式</a><span class="category-list-count">1</span></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-biao"> 标签</i></div><div class="tagcloud"><a href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F/" style="font-size: 15px;">分布式</a> <a href="/tags/%E5%B9%B6%E5%8F%91/" style="font-size: 15px;">并发</a> <a href="/tags/Zip-Java/" style="font-size: 15px;">Zip,Java</a> <a href="/tags/SpringBoot-Maven/" style="font-size: 15px;">SpringBoot,Maven</a> <a href="/tags/SpringBoot-Spring/" style="font-size: 15px;">SpringBoot,Spring</a> <a href="/tags/Spring-Bean/" style="font-size: 15px;">Spring,Bean</a> <a href="/tags/SpringMVC-Spring/" style="font-size: 15px;">SpringMVC,Spring</a> <a href="/tags/Map/" style="font-size: 15px;">Map</a> <a href="/tags/JavaEE-Servlet/" style="font-size: 15px;">JavaEE,Servlet</a> <a href="/tags/JVM/" style="font-size: 15px;">JVM</a> <a href="/tags/Redis/" style="font-size: 15px;">Redis</a> <a href="/tags/Linux/" style="font-size: 15px;">Linux</a> <a href="/tags/Git/" style="font-size: 15px;">Git</a> <a href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" style="font-size: 15px;">设计模式</a></div></div><div class="widget"><div class="widget-title"><i class="fa fa-archive"> 归档</i></div><ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/">2019</a><span class="archive-list-count">23</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/">2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/">2017</a><span class="archive-list-count">1</span></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-you"> 友情链接</i></div><ul></ul><a href="http://www.example1.com/" title="site-name1" target="_blank">site-name1</a><ul></ul><a href="http://www.example2.com/" title="site-name2" target="_blank">site-name2</a><ul></ul><a href="http://www.example3.com/" title="site-name3" target="_blank">site-name3</a></div></div></div></div><a id="totop" href="#top"></a><div id="footer"><div class="footer-info"><p><a href="/baidusitemap.xml">网站地图</a> |  <a href="/atom.xml">订阅本站</a> |  <a href="/about/">联系博主</a></p><p>本站总访问量：<i id="busuanzi_container_site_pv"><i id="busuanzi_value_site_pv"></i></i>次，本站总访客数:<i id="busuanzi_container_site_uv"><i id="busuanzi_value_site_uv"></i></i>人</p><p><span> Copyright &copy;<a href="/." rel="nofollow">duteliang.</a></span><span> Theme by<a rel="nofollow" target="_blank" href="https://github.com/chaooo/hexo-theme-BlueLake"> BlueLake.</a></span><span> Count by<a href="http://busuanzi.ibruce.info/" target="_blank" rel="noopener"> busuanzi.</a></span><span> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a></span></p></div></div></div><script src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script><script type="text/javascript" src="/js/search.json.js?v=2.0.4"></script><script type="text/javascript" src="/js/toctotop.js?v=2.0.4" async></script><link rel="stylesheet" type="text/css" href="/share/css/share.css"><script type="text/javascript" src="/share/js/social-share.js" charset="utf-8"></script><script type="text/javascript" src="/share/js/qrcode.js" charset="utf-8"></script></body></html>
