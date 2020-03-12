@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://yoursite.com/2020/03/12/javabase/java%E7%9A%84Stream%20API/</loc>
+    
+    <lastmod>2020-03-12T02:03:39.486Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://yoursite.com/2020/01/15/framework/aop%E8%AF%A6%E8%A7%A3/</loc>
     
     <lastmod>2020-01-17T18:16:59.293Z</lastmod>
